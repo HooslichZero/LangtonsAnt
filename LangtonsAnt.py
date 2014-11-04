@@ -17,9 +17,11 @@ class App(tk.Tk):
         self.cellwidth = 5
         self.cellheight = 5
         
-        self.size = (BOARD_SIZE * self.cellwidth) # Length of side of window (px)
+        # Length of side of window (px)
+        self.size = (BOARD_SIZE * self.cellwidth) 
         
-        self.canvas = tk.Canvas(self, width=self.size, height=self.size, highlightthickness=0)
+        self.canvas = tk.Canvas(self, width=self.size, 
+                                height=self.size, highlightthickness=0)
         self.canvas.pack(side="top", fill="both", expand="true")
             
         self.rect = {}
@@ -32,10 +34,12 @@ class App(tk.Tk):
                 x2 = x1 + self.cellwidth
                 y2 = y1 + self.cellheight
 
-                self.rect[row, column] = self.canvas.create_rectangle(x1, y1, x2, y2, fill="white", tags="rect")
+                self.rect[row, column] = self.canvas.create_rectangle(
+                    x1, y1, x2, y2, fill="white", tags="rect")
 
         # Array to keep track of desired colour for each cell:
-        self.colourArray = [[0 for x in xrange(BOARD_SIZE)] for y in xrange(BOARD_SIZE)] 
+        self.colourArray = [[0 for x in xrange(BOARD_SIZE)] 
+                            for y in xrange(BOARD_SIZE)] 
 
         # Create new active square (the 'Ant'):
         self.active = ActiveSquare()
@@ -48,24 +52,28 @@ class App(tk.Tk):
     def updateColours(self, iCount):
 
         """
-        Updates colourArray with the correct colour for the next screen refresh.
+        Updates colourArray with the correct colour for the next screen 
+        refresh.
         """
         
         # Remember, in the context of colourArray: 0 == white; 1 == black
 
         if self.colourArray[self.active.currX][self.active.currY] == 0:
             self.colourArray[self.active.currX][self.active.currY] = 1
-            self.canvas.itemconfig(self.rect[self.active.currY, self.active.currX],fill="black")
+            self.canvas.itemconfig(
+                self.rect[self.active.currY, self.active.currX],fill="black")
             self.active = self.active.rotateRight()
 
         else:
             self.colourArray[self.active.currX][self.active.currY] = 0
-            self.canvas.itemconfig(self.rect[self.active.currY, self.active.currX],fill="white")
+            self.canvas.itemconfig(
+                self.rect[self.active.currY, self.active.currX],fill="white")
             self.active = self.active.rotateLeft()
 
         self.active = self.active.moveOne()
 
-        self.canvas.itemconfig(self.rect[self.active.currY,self.active.currX],fill="red")
+        self.canvas.itemconfig(
+            self.rect[self.active.currY,self.active.currX],fill="red")
 
         if iCount % 100 == 0: print iCount
 
@@ -78,7 +86,8 @@ class ActiveSquare:
     Class to represent the red, active, square. The is the 'Ant'.
     """
 
-    def __init__(self, currX = BOARD_SIZE/2, currY = BOARD_SIZE/2, direction = 'U'):
+    def __init__(self, currX = BOARD_SIZE/2, currY = BOARD_SIZE/2, 
+                    direction = 'U'):
         self.currX = currX
         self.currY = currY
         self.direction = direction
@@ -110,7 +119,7 @@ class ActiveSquare:
 
         return self
 
-
+        
 if __name__ == "__main__":
     
     app = App()
