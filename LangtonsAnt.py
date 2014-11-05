@@ -46,6 +46,38 @@ class App(tk.Tk):
 
         self.colourArray[self.active.currX][self.active.currY] = 1
 
+        userString = raw_input("Enter the desired sequence: ")
+
+        # Dictinary format: a:[b,c] means: if current direction == a, then
+        # rotate according to b, and change current square's colour to c 
+
+        #'RR' == 'rotate right'; 'RL' == 'rotate left'
+
+        self.rulesDict = {}
+
+        for i in xrange(0,len(userString)):
+            if userString[i] == 'R':
+                self.rulesDict[i] = ['RR', i+1]
+            else:
+                self.rulesDict[i] = ['RL', i+1]
+
+        self.rulesDict[len(self.rulesDict)-1][1] = 0
+
+        self.colourDict = {
+            0: 'white', 
+            1: 'red', 
+            2: 'green', 
+            3: 'yellow',
+            4: 'orange',
+            5: 'cyan',
+            6: 'sienna1',
+            7: 'purple2',
+            8: 'dodger blue',
+            9: 'green4',
+            10: 'blue2',
+            11: 'seagreen1'
+            }
+
         self.updateColours(iCount = 0)
 
 
@@ -55,25 +87,28 @@ class App(tk.Tk):
         Updates colourArray with the correct colour for the next screen 
         refresh.
         """
-        
-        # Remember, in the context of colourArray: 0 == white; 1 == black
 
-        if self.colourArray[self.active.currX][self.active.currY] == 0:
-            self.colourArray[self.active.currX][self.active.currY] = 1
-            self.canvas.itemconfig(
-                self.rect[self.active.currY, self.active.currX],fill="black")
+        currentColour = self.colourArray[self.active.currX][self.active.currY]
+
+        if self.rulesDict[currentColour][0] == 'RR':
             self.active = self.active.rotateRight()
 
         else:
-            self.colourArray[self.active.currX][self.active.currY] = 0
-            self.canvas.itemconfig(
-                self.rect[self.active.currY, self.active.currX],fill="white")
             self.active = self.active.rotateLeft()
+
+        self.colourArray[self.active.currX][self.active.currY] = self.rulesDict[currentColour][1]
+        currentColour = self.colourArray[self.active.currX][self.active.currY]
+
+        self.canvas.itemconfig(
+                self.rect[self.active.currY, self.active.currX],
+                fill=self.colourDict[currentColour])
+
+
 
         self.active = self.active.moveOne()
 
         self.canvas.itemconfig(
-            self.rect[self.active.currY,self.active.currX],fill="red")
+            self.rect[self.active.currY,self.active.currX],fill="black")
 
         if iCount % 100 == 0: print iCount
 
@@ -83,7 +118,7 @@ class App(tk.Tk):
 class ActiveSquare:
 
     """
-    Class to represent the red, active, square. The is the 'Ant'.
+    Class to represent the black, active, square. The is the 'Ant'.
     """
 
     def __init__(self, currX = BOARD_SIZE/2, currY = BOARD_SIZE/2, 
