@@ -46,6 +46,9 @@ class App(tk.Tk):
 
         self.colourArray[self.active.currX][self.active.currY] = 1
 
+        self.counter = tk.Label(self, text = "Steps moved: 0")
+        self.counter.pack()
+
         userString = raw_input("Enter the desired sequence: ")
 
         # Dictinary format: a:[b,c] means: if current direction == a, then
@@ -64,19 +67,19 @@ class App(tk.Tk):
         self.rulesDict[len(self.rulesDict)-1][1] = 0
 
         self.colourDict = {
-            0: 'white', 
-            1: 'red', 
-            2: 'green', 
+            0: 'dodger blue', 
+            1: 'green', 
+            2: 'red', 
             3: 'yellow',
             4: 'orange',
-            5: 'cyan',
+            5: 'seagreen1',
             6: 'sienna1',
             7: 'purple2',
-            8: 'dodger blue',
+            8: 'cyan',
             9: 'green4',
-            10: 'blue2',
-            11: 'seagreen1'
+            10: 'blue2'
             }
+
 
         self.updateColours(iCount = 0)
 
@@ -87,6 +90,8 @@ class App(tk.Tk):
         Updates colourArray with the correct colour for the next screen 
         refresh.
         """
+
+        self.counter.configure(text = "Steps moved: " + str(iCount))
 
         currentColour = self.colourArray[self.active.currX][self.active.currY]
 
@@ -109,8 +114,6 @@ class App(tk.Tk):
 
         self.canvas.itemconfig(
             self.rect[self.active.currY,self.active.currX],fill="black")
-
-        if iCount % 100 == 0: print iCount
 
         self.after(delay, lambda: self.updateColours(iCount+1))
 
